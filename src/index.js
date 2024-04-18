@@ -73,18 +73,20 @@ function Menu() {
       <h2>Our Menu!!</h2>
 
       <ul className='pizzas'>
-        {pizzaData.map((pizza) => {
-          return (
-            <Pizza
-              name={pizza.name}
-              ingredients={pizza.ingredients}
-              price={pizza.price}
-              photoName={pizza.photoName}
-              soldOut={pizza.soldOut}
-              key={pizza.name}
-            />
-          );
-        })}
+        {pizzaData
+          // .filter((pizza) => !pizza.soldOut)
+          .map((pizza) => {
+            return (
+              <Pizza
+                name={pizza.name}
+                ingredients={pizza.ingredients}
+                price={pizza.price}
+                photoName={pizza.photoName}
+                soldOut={pizza.soldOut}
+                key={pizza.name}
+              />
+            );
+          })}
       </ul>
     </main>
   );
@@ -92,12 +94,12 @@ function Menu() {
 
 function Pizza(props) {
   return (
-    <li className='pizza'>
+    <li className={`pizza ${props.soldOut ? 'sold-out' : ''}`}>
       <img src={props.photoName} alt={props.name} />
       <div>
         <h3>{props.name}</h3>
         <p>{props.ingredients}</p>
-        <span>{props.price + 3}</span>
+        <span>{props.soldOut ? 'SOLD OUT' : props.price}</span>
       </div>
     </li>
   );
@@ -107,15 +109,32 @@ function Footer() {
   const hour = new Date().getHours();
 
   const openHour = 12;
-  const closeHour = 23;
+  const closeHour = 22;
 
   const isOpen = hour >= openHour && hour <= closeHour;
   console.log(isOpen);
 
   return (
     <footer className='footer'>
-      {new Date().toLocaleTimeString()}.We're currently open!!
+      {isOpen ? (
+        <Order openHour={openHour} closeHour={closeHour} />
+      ) : (
+        <p>
+          We're happy to welcome you between {openHour}:00 to {closeHour}:00 :)
+        </p>
+      )}
     </footer>
+  );
+}
+
+function Order(props) {
+  return (
+    <div className='order'>
+      <p>
+        We are open until {props.closeHour}, Come visit us or order online!!
+      </p>
+      <button className='btn'>Order</button>
+    </div>
   );
 }
 
